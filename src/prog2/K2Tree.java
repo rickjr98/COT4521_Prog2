@@ -10,14 +10,14 @@ package prog2;
  * @author rickj
  */
 public class K2Tree {
-    private Node root;    //root of the k-2 tree; implemented as a dummy node.
+    private Node root;
     
     public K2Tree()
     {
-        root = new Node();  //dummy node as the root
+        root = new Node();
         root.setLeftChild(null);
         root.setRightChild(null);
-        root.setInfo(null); //dummy Point assigned to the root
+        root.setInfo(null);
     }
     
     public void add(Point p)
@@ -29,12 +29,7 @@ public class K2Tree {
     {
         return root.getLeftChild() == null;
     }
-    
-    /**
-     * Prints points in this tree object contained in the given rectangle.
-     * 
-     * @param r rectangle
-     */
+
     public void pointsInRange(Rectangle r)
     {
         pointsInRange(r, root.getLeftChild(), "even");
