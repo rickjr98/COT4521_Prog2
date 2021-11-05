@@ -5,10 +5,9 @@
  */
 package prog2;
 
-/**
- *
- * @author rickj
- */
+// Ricardo Estrella
+// 6071900
+
 public class K2Tree {
     private Node root;
     

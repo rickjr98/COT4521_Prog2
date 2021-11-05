@@ -5,10 +5,9 @@
  */
 package prog2;
 
-/**
- *
- * @author rickj
- */
+// Ricardo Estrella
+// 6071900
+
 public class Node {
     private Point point;
     private Node left;
