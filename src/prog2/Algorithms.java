@@ -1,4 +1,7 @@
 package prog2;
+
+import java.util.ArrayList;
+
 /**
  * This class implements several algorithms.
  */
@@ -52,5 +55,22 @@ public class Algorithms
             }
         }
         return -1;
+    }
+    
+    public static Point[] inRectangle(GeometricObject[] g, Rectangle r)
+    {
+        int inputLength = g.length; //number of points in input array
+        Point[] pArray = (Point[])g; //input points
+        
+        K2Tree k2Tree = new K2Tree();
+        for(int i=0; i<inputLength; i++)
+        {
+            k2Tree.add(pArray[i]);
+        }
+        
+        ArrayList<Point> pList = k2Tree.pointsInRange(r);
+        Point[] output = pList.toArray(new Point[pList.size()]);
+        
+        return output;
     }
 }

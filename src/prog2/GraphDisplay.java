@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -11,11 +12,13 @@ import javax.imageio.ImageIO;
 // Ricardo Estrella
 // PID: 6071900
 
-public class GraphDisplay extends JPanel implements MouseMotionListener
+public class GraphDisplay extends JPanel implements MouseMotionListener, MouseListener
 {
     GeometricObject[] gArray; //geometric objects
     private BufferedImage image; //background image
     String description; //description of map element
+    Point begin;
+    Rectangle selectionRectangle;
     
     /**
      * Parameterized constructor.
@@ -24,6 +27,9 @@ public class GraphDisplay extends JPanel implements MouseMotionListener
     {
         this.gArray = g;
         addMouseMotionListener(this);
+        addMouseListener(this);
+        begin = null;
+        selectionRectangle = null;
         
         try
         {
@@ -37,8 +43,36 @@ public class GraphDisplay extends JPanel implements MouseMotionListener
         description = "";
     }
     
+    @Override
     public void mouseDragged(MouseEvent e)
     {
+        Point end = new Point(e.getX(), e.getY());
+        selectionRectangle = new Rectangle(begin, end);
+        repaint();
+    }
+    
+    public void mousePressed(MouseEvent e)
+    {
+        begin = new Point(e.getX(), e.getY());
+    }
+    
+    public void mouseReleased(MouseEvent e)
+    {
+        Point end = new Point(e.getX(), e.getY());
+        selectionRectangle = new Rectangle(begin, end);
+        begin = null;
+        
+        Point[] pArray = Algorithms.inRectangle(gArray, selectionRectangle);
+            
+        for(int i=0; i<pArray.length; i++)
+        {
+            pArray[i].setInteriorColor(Color.green);
+        }        
+        
+        repaint();
+        
+        String str = "Summary" + "\nNumber of Points: " + pArray.length + "\nRectangle's Height: " + selectionRectangle.height() + "\nRectangle's Width: " + selectionRectangle.width();
+        JOptionPane.showMessageDialog(null, str, "Output", JOptionPane.PLAIN_MESSAGE);
     }
 
     /**
@@ -46,6 +80,7 @@ public class GraphDisplay extends JPanel implements MouseMotionListener
      * 
      * @param e contains current location of mouse
      */
+    @Override
     public void mouseMoved(MouseEvent e)
     {
         //only for coordinates lookup; remove after project completion
@@ -57,35 +92,6 @@ public class GraphDisplay extends JPanel implements MouseMotionListener
         int x = e.getPoint().x;
         int y = e.getPoint().y;
         Point p = new Point(e.getPoint().x, e.getPoint().y);
-        int loc = Algorithms.isPointInPolygon(gArray, p);
-        
-        switch (loc)
-        {
-            case 0:
-                description = "Riccardo Silva Stadium";
-                break;
-            case 1:
-                description = "Parking Garage 6";
-                break;
-            case 2:
-                description = "Parking Garage 3";
-                break;
-            case 3:
-                description = "Parking Garage 5";
-                break;
-            case 4:
-                description = "Blue Parking Garage";
-                break;
-            case 5:
-                description = "Parking Garage 4";
-                break;
-            case 6:
-                description = "Gold Parking Garage";
-                break;
-            default:
-                description = "";
-                break;
-        }
         
         repaint();
     }
@@ -98,16 +104,20 @@ public class GraphDisplay extends JPanel implements MouseMotionListener
     public void paint(Graphics g)
     {        
         super.paint(g); //clears window
+        if (selectionRectangle != null)
+            selectionRectangle.draw(g);
         
         //draws background image
         Dimension d = getSize();
         g.drawImage(image, 0, 0, d.width, d.height, this);
-        
-        //outputs description
-        g.setColor(new Color(64, 64, 64, 128));
-        g.fillRoundRect(0, 385, 150, 30, 5, 5);
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("SansSerif", Font.BOLD, 12));
-        g.drawString(description, 20, 405);
     }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {}
+
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+
+    @Override
+    public void mouseExited(MouseEvent e) {}
 }

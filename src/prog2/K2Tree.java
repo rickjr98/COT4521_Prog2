@@ -6,6 +6,9 @@
 package prog2;
 
 // Ricardo Estrella
+
+import java.util.ArrayList;
+
 // 6071900
 
 public class K2Tree {
@@ -29,9 +32,9 @@ public class K2Tree {
         return root.getLeftChild() == null;
     }
 
-    public void pointsInRange(Rectangle r)
+    public ArrayList<Point> pointsInRange(Rectangle r)
     {
-        pointsInRange(r, root.getLeftChild(), "even");
+        return pointsInRange(r, root.getLeftChild(), "even");
     }
 
     public String toString()
@@ -68,45 +71,6 @@ public class K2Tree {
         return node;
     }
 
-    private void pointsInRange(Rectangle r, Node node, String level)
-    {
-        if (node != null)
-        {
-            double minX = r.smallestX();
-            double maxX = r.greatestX();
-            double minY = r.smallestY();
-            double maxY = r.greatestY();
-
-            double x = node.getInfo().getX();
-            double y = node.getInfo().getY();
-
-            if ((minX<=x && x<=maxX) &&
-                (minY<=y && y<=maxY))
-            {
-                System.out.println(node.getInfo());
-            }
-
-            switch (level)
-            {
-                case "even" ->
-                {
-                    if (minX <= x)
-                        pointsInRange(r, node.getLeftChild(), "odd");
-                    if (maxX >= x)
-                        pointsInRange(r, node.getRightChild(), "odd");
-                }
-
-                case "odd" ->
-                {
-                    if (minY <= y)
-                        pointsInRange(r, node.getLeftChild(), "even");
-                    if (maxY >= y)
-                        pointsInRange(r, node.getRightChild(), "even");
-                }
-            }
-        }
-    }
-
     private String toString(Node p)
     {
         if (p != null)
@@ -116,5 +80,64 @@ public class K2Tree {
                    toString(p.getRightChild());
         }
         else return "";
+    }
+    
+    private ArrayList<Point> pointsInRange(Rectangle r, Node node, String level)
+    {
+        ArrayList<Point> pArray = new ArrayList<>();
+        
+        if (node != null)
+        {
+            double minX = r.smallestX();
+            double maxX = r.greatestX();
+            double minY = r.smallestY();
+            double maxY = r.greatestY();
+            
+            double x = node.getInfo().getX();
+            double y = node.getInfo().getY();
+            
+            if ((minX<=x && x<=maxX) &&
+                (minY<=y && y<=maxY))
+            {
+                pArray.add(node.getInfo());
+            }
+            
+            switch (level)
+            {
+                case "even" ->
+                {
+                    if (minX <= x)
+                    {
+                        ArrayList<Point> t =
+                                pointsInRange(r, node.getLeftChild(), "odd");
+                        pArray.addAll(t);
+                    }
+                    if (maxX >= x)
+                    {
+                        ArrayList<Point> t =
+                                pointsInRange(r, node.getRightChild(), "odd");
+                        pArray.addAll(t);
+                    }
+                }
+
+                case "odd" ->
+                {
+                    if (minY <= y)
+                    {
+                        ArrayList<Point> t =
+                                pointsInRange(r, node.getLeftChild(), "even");
+                        pArray.addAll(t);
+                    }
+                    if (maxY >= y)
+                    {
+                        ArrayList<Point> t =
+                                pointsInRange(r, node.getRightChild(), "even");
+                        pArray.addAll(t);
+                    }
+                }
+            }
+        }
+        
+        return pArray;
     }
 }
