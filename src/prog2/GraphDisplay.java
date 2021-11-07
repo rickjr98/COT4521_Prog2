@@ -51,11 +51,13 @@ public class GraphDisplay extends JPanel implements MouseMotionListener, MouseLi
         repaint();
     }
     
+    @Override
     public void mousePressed(MouseEvent e)
     {
         begin = new Point(e.getX(), e.getY());
     }
     
+    @Override
     public void mouseReleased(MouseEvent e)
     {
         Point end = new Point(e.getX(), e.getY());
@@ -63,15 +65,34 @@ public class GraphDisplay extends JPanel implements MouseMotionListener, MouseLi
         begin = null;
         
         Point[] pArray = Algorithms.inRectangle(gArray, selectionRectangle);
+        
+        int maxStudents = pArray[0].getStudents();
+        for(int i = 1; i < pArray.length; i++){ 
+            if(pArray[i].getStudents() > maxStudents){ 
+                maxStudents = pArray[i].getStudents(); 
+            }
+        }
+        
+        int minStudents = pArray[0].getStudents(); 
+        for(int i = 1; i < pArray.length; i++){ 
+            if(pArray[i].getStudents() < minStudents){ 
+                minStudents = pArray[i].getStudents(); 
+            }
+        }
+        
+        int total = 0;
             
         for(int i=0; i<pArray.length; i++)
         {
             pArray[i].setInteriorColor(Color.green);
-        }        
+            total += pArray[i].getStudents();
+        }
+        
+        int averageStudents = total / pArray.length;
         
         repaint();
         
-        String str = "Summary" + "\nNumber of Points: " + pArray.length + "\nRectangle's Height: " + selectionRectangle.height() + "\nRectangle's Width: " + selectionRectangle.width();
+        String str = "Summary" + "\nNumber of Buildings selected: " + pArray.length + "\nMinimum Number of Students: " + minStudents + "\nAverage Student Population: " + averageStudents + "\nMaximum Student Population: " + maxStudents + "\nTotal Student Population: " + total;
         JOptionPane.showMessageDialog(null, str, "Output", JOptionPane.PLAIN_MESSAGE);
     }
 

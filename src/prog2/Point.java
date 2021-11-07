@@ -10,6 +10,7 @@ public class Point extends GeometricObject
 {
     private double x;
     private double y;
+    private int students;
 
     /**
      * Instantiates a Point object with coordinates (0, 0) and parent's default
@@ -74,6 +75,10 @@ public class Point extends GeometricObject
     {
         return y;
     }
+    
+    public int getStudents() {
+        return students;
+    }
 
     /**
      * Rotates this point about the origin by the given angle.
@@ -112,6 +117,10 @@ public class Point extends GeometricObject
     public void setY(double y)
     {
         this.y = y;
+    }
+    
+    public void setStudents(int students) {
+        this.students = students;
     }
 
     /**
